@@ -1,0 +1,127 @@
+package com.mycompany.myapp.domain;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * A Department.
+ */
+@Entity
+@Table(name = "department")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Department implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    
+    @Column(name = "department_name", unique = true)
+    private String departmentName;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Location location;
+
+    /**
+     * A relationship
+     */
+    @ApiModelProperty(value = "A relationship")
+    @OneToMany(mappedBy = "department")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Employee> departamentNames = new HashSet<>();
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public Department departmentName(String departmentName) {
+        this.departmentName = departmentName;
+        return this;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Department location(Location location) {
+        this.location = location;
+        return this;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Set<Employee> getDepartamentNames() {
+        return departamentNames;
+    }
+
+    public Department departamentNames(Set<Employee> employees) {
+        this.departamentNames = employees;
+        return this;
+    }
+
+    public Department addDepartamentName(Employee employee) {
+        this.departamentNames.add(employee);
+        employee.setDepartment(this);
+        return this;
+    }
+
+    public Department removeDepartamentName(Employee employee) {
+        this.departamentNames.remove(employee);
+        employee.setDepartment(null);
+        return this;
+    }
+
+    public void setDepartamentNames(Set<Employee> employees) {
+        this.departamentNames = employees;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Department)) {
+            return false;
+        }
+        return id != null && id.equals(((Department) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+            "id=" + getId() +
+            ", departmentName='" + getDepartmentName() + "'" +
+            "}";
+    }
+}
